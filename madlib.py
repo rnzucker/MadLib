@@ -6,12 +6,11 @@ the same part of speech: adverb, adjective, verb, or noun.
 
 """
 
-from urllib.request import urlopen
-from urllib.error import HTTPError
 import PyPDF2
-import sys, logging, requests
+import sys, logging
 from textblob import TextBlob
-import os
+import requests
+import random
 
 __author__ = 'rnzucker'
 
@@ -32,9 +31,13 @@ def text_list(filename):
             return text
     return text
 
-def main():
-    input_file = "test.pdf"
-    text_version = text_list(input_file)
+def clean_text(text_version):
+    """Takes the string version of a PDF, and gets rid of the extra line breaks that were added
+
+    PyPDF2.extractText seems to add a line break after 80 characters, so those need to be stripped out.
+    But that results in one long line. This function restores the line breaks that were there after
+    periods.
+    """
     # Create a special string that won't occur naturally, three multiplication symbols in a row
     repl_string = chr(215) + chr(215) + chr(215)
     # Replace normal line breaks after a period with the special marker
@@ -45,12 +48,36 @@ def main():
     text_version = text_version.replace(repl_string, ".\n")
     # Get rid of the extra space resulting at the beginning of some lines
     text_version = text_version.replace("\n ", "\n")
-    blob = TextBlob(text_version)
-    # extractText seems to add a line break after 80 characters, so those need to be stripped out.
-    # This results in one long line.
+    return text_version
+
+
+def main():
+    input_file = "test.pdf"
+    string_form = text_list(input_file)
+    string_form = clean_text(string_form)
+    blob = TextBlob(string_form)
 
     print(blob)
     print(blob.tags)
+
+    # Wanted to pull word list from a website, but I was worried about hitting the website too much
+    # while developing the code. I downloaded the file, but left the old code here as an example.
+    # This code results in each element of the list being a byte literal. To convert to a string use
+    # the decode option, like words[index].decode("utf-8")
+    #
+    # word_site = "http://svnweb.freebsd.org/csrg/share/dict/words?view=co&content-type=text/plain"
+    # word_list = requests.get(word_site)
+    # words = word_list.content.splitlines()
+    word_file = open("words.txt", "r")
+    words = word_file.readlines()
+    num_words = len(words)
+    print("There are {} words. It is of type {}".format(num_words, type(words)))
+
+    random.seed()
+    index = random.randint(0, num_words)
+    print("Random word", index, "is", words[index], "\nType of words and of each element",
+          type(words), type(words[index]))
+
 
 
 # Check for interactive session
