@@ -52,8 +52,9 @@ def clean_text(text_version):
 
 
 def main():
-    input_file = "test.pdf"
+    input_file = "test-1.pdf"
     string_form = text_list(input_file)
+    print(string_form)
     string_form = clean_text(string_form)
     blob = TextBlob(string_form)
 
