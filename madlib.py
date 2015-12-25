@@ -9,8 +9,7 @@ the same part of speech: adverb, adjective, verb, or noun.
 import PyPDF2
 import sys, logging
 from textblob import TextBlob
-import requests
-import random
+import requests, random, re
 
 __author__ = 'rnzucker'
 
@@ -44,16 +43,21 @@ def clean_text(text_version):
     But that results in one long line. This function restores the line breaks that were there after
     periods.
     """
+    # Remove the newlines that are not preceded by periods
+    x = re.sub(r"([^\.])\n", "\g<1>", text_version)
+    # Remove the white space after the newline that is preceded by a period
+    y = re.sub(r"(\.\n)\s*", "\g<1>", x)
+    text_version = y
     # Create a special string that won't occur naturally, three multiplication symbols in a row
-    repl_string = chr(215) + chr(215) + chr(215)
+#    repl_string = chr(215) + chr(215) + chr(215)
     # Replace normal line breaks after a period with the special marker
-    text_version = text_version.replace(".\n", repl_string)
+#    text_version = text_version.replace(".\n", repl_string)
     # Replace the line breaks left with a null string
-    text_version = text_version.replace("\n", "")
+#    text_version = text_version.replace("\n", "")
     # Replace the special marker with a period and a line break
-    text_version = text_version.replace(repl_string, ".\n")
+#    text_version = text_version.replace(repl_string, ".\n")
     # Get rid of the extra space resulting at the beginning of some lines
-    text_version = text_version.replace("\n ", "\n")
+#    text_version = text_version.replace("\n ", "\n")
     return text_version
 
 
@@ -65,7 +69,8 @@ def main():
     blob = TextBlob(string_form)
 
 
-    print(string_form[0])
+    print(blob.tags[19][0])
+    print(blob.tags[20][0])
     print(blob)
     print(blob.tags)
 
@@ -85,7 +90,7 @@ def main():
     random.seed()
     index = random.randint(0, num_words)
     single_blob = TextBlob(words[index])
-    print("Random word", index, "is", words[index].rstrip(), "type", single_blob.tags[0][1], end="")
+    print("Random word", index, "is", words[index].rstrip(), "type", single_blob.tags[0][1], "is a", end="")
     if single_blob.tags[0][1] in ADJECTIVES:
         print('adjective')
     elif single_blob.tags[0][1] in ADVERBS:
