@@ -14,6 +14,12 @@ import random
 
 __author__ = 'rnzucker'
 
+ADJECTIVES = ['JJ', 'JJR', 'JJS']
+ADVERBS = ['RB', 'RBR', 'RBS']
+# Nouns will include pronouns
+NOUNS = ['NN', 'NNS', 'NNP', 'NNPS', 'PRP', 'PRP$']
+VERBS = ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']
+
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 def text_list(filename):
@@ -58,6 +64,8 @@ def main():
     string_form = clean_text(string_form)
     blob = TextBlob(string_form)
 
+
+    print(string_form[0])
     print(blob)
     print(blob.tags)
 
@@ -76,8 +84,18 @@ def main():
 
     random.seed()
     index = random.randint(0, num_words)
-    print("Random word", index, "is", words[index], "\nType of words and of each element",
-          type(words), type(words[index]))
+    single_blob = TextBlob(words[index])
+    print("Random word", index, "is", words[index].rstrip(), "type", single_blob.tags[0][1], end="")
+    if single_blob.tags[0][1] in ADJECTIVES:
+        print('adjective')
+    elif single_blob.tags[0][1] in ADVERBS:
+        print(' adverb')
+    elif single_blob.tags[0][1] in NOUNS:
+        print(' noun')
+    elif single_blob.tags[0][1] in VERBS:
+        print(' verb')
+    else:
+        print(' other type')
 
 
 
