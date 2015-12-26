@@ -67,11 +67,9 @@ def main():
     print(string_form)
     string_form = clean_text(string_form)
     blob = TextBlob(string_form)
+    string_form = string_form.replace("Amazon", "Dragon")
 
-
-    print(blob.tags[19][0])
-    print(blob.tags[20][0])
-    print(blob)
+    print(string_form)
     print(blob.tags)
 
     # Wanted to pull word list from a website, but I was worried about hitting the website too much
@@ -90,7 +88,7 @@ def main():
     random.seed()
     index = random.randint(0, num_words)
     single_blob = TextBlob(words[index])
-    print("Random word", index, "is", words[index].rstrip(), "type", single_blob.tags[0][1], "is a", end="")
+    print("Random word", index, "is", words[index].rstrip(), ", type", single_blob.tags[0][1], "is a", end="")
     if single_blob.tags[0][1] in ADJECTIVES:
         print('adjective')
     elif single_blob.tags[0][1] in ADVERBS:
