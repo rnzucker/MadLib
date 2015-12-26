@@ -4,6 +4,9 @@ This will read a PDF file. It will produce a version with random words removed, 
 can be filled out for fun. It will also produce a version with words replaced with
 the same part of speech: adverb, adjective, verb, or noun.
 
+The code is stalled as I realized that TextBlog is unreliable. It took the word
+doesn't and turned it into "does", "n", "'", and "t"
+
 """
 
 import PyPDF2
@@ -45,19 +48,9 @@ def clean_text(text_version):
     """
     # Remove the newlines that are not preceded by periods
     x = re.sub(r"([^\.])\n", "\g<1>", text_version)
-    # Remove the white space after the newline that is preceded by a period
+    # Remove the white space after the newline that is preceded by a period (and is on the next line)
     y = re.sub(r"(\.\n)\s*", "\g<1>", x)
     text_version = y
-    # Create a special string that won't occur naturally, three multiplication symbols in a row
-#    repl_string = chr(215) + chr(215) + chr(215)
-    # Replace normal line breaks after a period with the special marker
-#    text_version = text_version.replace(".\n", repl_string)
-    # Replace the line breaks left with a null string
-#    text_version = text_version.replace("\n", "")
-    # Replace the special marker with a period and a line break
-#    text_version = text_version.replace(repl_string, ".\n")
-    # Get rid of the extra space resulting at the beginning of some lines
-#    text_version = text_version.replace("\n ", "\n")
     return text_version
 
 
@@ -70,7 +63,7 @@ def main():
     string_form = string_form.replace("Amazon", "Dragon")
 
     print(string_form)
-    print(blob.tags)
+    print("Blob length = ", len(blob.tags), blob.tags)
 
     # Wanted to pull word list from a website, but I was worried about hitting the website too much
     # while developing the code. I downloaded the file, but left the old code here as an example.
