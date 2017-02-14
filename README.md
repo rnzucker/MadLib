@@ -10,3 +10,7 @@ etc. rather than on Python.
 
 Each run will choose what percentage of the replaced or empty text should be
 adverbs, adjectives, verbs, or nouns.
+
+Note that the libraries used for parsing the PDF and identifying parts of
+speech are not 100% reliable. When something is free, you get what you
+pay for.
